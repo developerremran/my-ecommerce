@@ -1,0 +1,11 @@
+/* tailwind middleware */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.mainWidth{
+    max-width: 1240px;
+    margin: 0 auto;
+}
