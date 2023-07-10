@@ -1,9 +1,20 @@
-import React from 'react';
+
+import Banner from './Banner';
+import Slide from './Slide';
+import FetureProducts from './FetureProducts/FetureProducts';
+import NewsLetter from './NewsLetter/NewsLetter';
+import CategoryDataShow from './CategoryData/CategoryDataShow';
+ 
 
 const Home = () => {
     return (
         <div>
-            This is a HOme page
+           <Banner></Banner>
+           <Slide></Slide>
+           <FetureProducts></FetureProducts>
+           {/* <FetureProducts></FetureProducts> */}
+           <NewsLetter></NewsLetter>
+           <CategoryDataShow></CategoryDataShow>
         </div>
     );
 };

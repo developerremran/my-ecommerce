@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 
 const HomePageLayout = () => {
     return (
-        <div>
+        <div className='mainWidth'>
             <Header></Header>
             <Outlet></Outlet>
             <Footer></Footer>

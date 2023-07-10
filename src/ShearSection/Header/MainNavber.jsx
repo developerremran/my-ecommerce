@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 
 import cartIcon from '../../Image/Icon/cart.png'
+import { useContext } from "react";
+import { AuthContext } from "../../AuthProvider/AuthProvider";
 
 const MainNavber = () => {
+    const { user ,userLogOut} = useContext(AuthContext)
+
+
+    const outME = () => {
+        userLogOut()
+    }
     return (
         <div className="mainWidth">
             <div className="navbar bg-[#F5F5F5]">
@@ -19,8 +27,18 @@ const MainNavber = () => {
                 </div>
                 <div className="navbar-end">
                     <ul className="menu menu-horizontal px-1 text-lg font-mono border-r-2">
-                        <li><Link to='login'> Login</Link></li>
-                        <li><Link to='register'>Register</Link></li>
+                        {
+                            user ?
+                                <>
+                                    <li><Link onClick={outME}>LogOut</Link></li>
+                                    <li><Link to='admin/dashboard'>Dashboard</Link></li>
+
+                                </> :
+                                <>
+                                    <li><Link to='login'> Login</Link></li>
+                                    <li><Link to='register'>Register</Link></li>
+                                </>
+                        }
                     </ul>
                     <span className="flex gap-2 items-center pl-2">
                         <p>

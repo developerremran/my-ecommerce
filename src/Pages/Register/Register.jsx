@@ -1,13 +1,66 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 
 import animationn from './Animation in REgister/145499-temanasn-home-mobile.json'
-
+import { useForm } from 'react-hook-form';
+import { AuthContext } from '../../AuthProvider/AuthProvider';
+import { newUserR } from '../../API/Auth';
+import { toast } from 'react-hot-toast';
+import { useLocation, useNavigate, } from 'react-router-dom';
 
 
 const Register = () => {
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { newUser, userUpdateNP, setLoading } = useContext(AuthContext);
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/'
+    const onSubmit = async (data) => {
+        try {
+            const { name, email, photoURL, password } = data;
+            const photo = photoURL[0];
+            console.log(photo);
+
+            const formData = new FormData();
+            formData.append('image', photo);
+
+            const url = 'https://api.imgbb.com/1/upload?key=7554f5a44bc34202b22319ab3235dee3';
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Image upload failed');
+            }
+
+            const imageData = await response.json();
+            const imageUrl = imageData.data.display_url;
+
+            const result = await newUser(email, password);
+            const user = result.user;
+
+            await userUpdateNP(name, imageUrl);
+            const userInfo = { name, email }
+            newUserR(userInfo)
+                .then(data => {
+                    console.log(data);
+                    if (data.insertedId) {
+                        toast.success('Register Success ')
+                        navigate(from, { replace: true })
+
+                    }
+                })
+
+        } catch (error) {
+            setLoading(false);
+            console.log(error.message);
+            // Handle the error condition and show appropriate feedback
+        }
+    };
     return (
-        <div className='mainWidth grid grid-cols-2 gap-2 items-center'>
+        <div className='mainWidth grid grid-cols-2 gap-2 items-center h-screen'>
             <div>
                 <Player
                     autoplay={true}
@@ -26,15 +79,15 @@ const Register = () => {
                                 <div className="mb-10 text-4xl italic text-center md:mb-16">
                                     New User
                                 </div>
-                                <form className='space-y-4'>
-                                    <input className='border w-full p-2 shadow-md' type="email" name="name" placeholder="Enter Your Name" />
-                                     
-                                    <input className='border w-full p-2 shadow-md' type="email" name="photoURL" placeholder="Enter Your photoURL" />
+                                <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+                                    <input {...register("name", { required: true })} className='border w-full p-2 shadow-md' type="text" name="name" placeholder="Enter Your Name" />
 
-                                    <input className='border w-full p-2 shadow-md' type="email" name="email" placeholder="Email" />
+                                    <input {...register("photoURL", { required: true })} className='border w-full p-2 shadow-md' type="file" name="photoURL" placeholder="Enter Your photoURL" />
+
+                                    <input {...register("email", { required: true })} className='border w-full p-2 shadow-md' type="email" name="email" placeholder="Email" />
 
 
-                                    <input
+                                    <input {...register("password", { required: true })}
                                         className='border w-full p-2 shadow-md'
                                         type="password"
                                         name="password"
@@ -50,6 +103,8 @@ const Register = () => {
                                         </button>
                                     </div>
                                 </form>
+
+
                                 <p className="mb-6 text-base text-[#adadad]">Connect With</p>
                                 <ul className="-mx-2 mb-12 flex justify-between">
                                     <li className="w-full px-2">
