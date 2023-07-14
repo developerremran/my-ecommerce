@@ -3,28 +3,40 @@ import ManageUserGet from '../../../API/ManageUserGet';
 import { useContext } from 'react';
 import { AuthContext } from '../../../AuthProvider/AuthProvider';
 import { toast } from 'react-hot-toast';
+import { userDelete } from '../../../API/Auth';
 
 const AllManageUser = () => {
     const [newUserss, refetch, isLoading] = ManageUserGet()
     const { user } = useContext(AuthContext)
     console.log(user);
-  
+
 
     console.log(newUserss);
-    const handleMakeAdmin = user =>{
+    const handleMakeAdmin = user => {
         // console.log(email);
-        fetch(`${import.meta.env.VITE_lOCAL_Server}/users/admin/${user?._id}`,{
-          method:'PATCH'
+        fetch(`${import.meta.env.VITE_lOCAL_Server}/users/admin/${user?._id}`, {
+            method: 'PATCH'
         })
-        .then(res => res.json())
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data.modifiedCount) {
+                    refetch()
+                    toast.success(`${user.name} is an admin now`)
+                }
+            })
+    }
+
+    const deleteeduser = (_id) => {
+        userDelete(_id)
         .then(data => {
-          console.log(data);
-          if(data.modifiedCount){
-            refetch()
-            toast.success(`${user.name} is an admin now`)
-          }
+            console.log(data)
+            if(data.deletedCount > 0){
+                refetch()
+                alert('delete')
+            }
         })
-      } 
+    }
 
 
     return (
@@ -54,14 +66,8 @@ const AllManageUser = () => {
                                             user.role === 'admin' ? 'admin' : <>Make Admin</>
                                         }
                                     </span>
-
                                     <Link>
-                                        <button className="btn bg-[green] stn-sm text-white hover:text-black">
-                                            Make User
-                                        </button>
-                                    </Link>
-                                    <Link>
-                                        <button className="btn bg-[green] stn-sm text-white hover:text-black">
+                                        <button onClick={() => deleteeduser(user._id)} className="btn bg-[green] stn-sm text-white hover:text-black">
                                             Delete
                                         </button>
                                     </Link>

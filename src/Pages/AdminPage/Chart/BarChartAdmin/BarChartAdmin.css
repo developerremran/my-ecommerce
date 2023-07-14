@@ -1,0 +1,4 @@
+.recharts-rectangle {
+    fill-opacity: 0.8; /* Adjust the opacity of the bars */
+    stroke-width: 2; /* Increase the stroke width for a bolder appearance */
+  }

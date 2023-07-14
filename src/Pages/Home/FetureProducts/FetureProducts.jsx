@@ -20,9 +20,7 @@ const FetureProducts = () => {
 
         <div className='mt-28'>
              <TitleBox title={'FEATURED PRODUCTS'}>
-
              </TitleBox>
-
            <div className='py-20'>
            <Swiper
                 slidesPerView={4}

@@ -1,15 +1,19 @@
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { cartAdded } from '../../API/Auth';
+import { toast } from 'react-hot-toast';
+import { AuthContext } from '../../AuthProvider/AuthProvider';
 // import CategoryData from '../../API/CategoryData';
 
 const SingleDetailsPage = (products) => {
-  const [product, setProduct] = useState(null);
 
+  const [itemValue, setItemValue] = useState(0)
+const {user}= useContext(AuthContext)
+const email =user.email
+  const [product, setProduct] = useState(null);
   // const [userCategory] = CategoryData()
   // console.log(userCategory.length);
-
-
   const { id } = useParams();
   useEffect(() => {
     fetch(`http://localhost:5000/product/${id}`)
@@ -24,7 +28,42 @@ const SingleDetailsPage = (products) => {
     return <p>Loading...</p>;
   }
 
-  const {productName,productPrice,productCategory,productTags,productDescription,image}= product
+const quantity = parseInt(itemValue);
+  // console.log(quantity);
+
+
+  const { productName, productPrice, productCategory, productTags, productDescription, image, _id } = product;
+
+const totalPrice = parseInt(productPrice * quantity)
+
+  const valueUp = () => {
+    setItemValue(itemValue + 1);
+  }
+
+  const valueDown = () => {
+    if (itemValue > 0) {
+      setItemValue(itemValue - 1);
+    }
+  }
+  
+
+
+  const productAdd = (product) => {
+    const { productName, productPrice, productCategory,_id} = product;
+    const productDetails = { productName, productPrice, productCategory, quantity,totalPrice,email }
+    console.log(productDetails);
+
+    cartAdded(_id,productDetails)
+      .then(data => {
+        console.log(data);
+        if (data.insertedId) {
+          toast.success('Product Add Success')
+        }
+      })
+
+  }
+
+
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden">
@@ -56,9 +95,11 @@ const SingleDetailsPage = (products) => {
               </p>
               <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex">
-                  <form action="">
-                    <input className='w-[40px] border-2 text-center' type='number'></input>
-                  </form>
+                  <span onClick={valueDown} className='p-2 border'>-</span>
+                  <span className='p-2 border'>{itemValue}</span>
+                  <span onClick={valueUp} className='p-2 border'>+</span>
+
+
                 </div>
                 <div className="flex ml-6 items-center">
                   {/* Size selection dropdown */}
@@ -68,7 +109,7 @@ const SingleDetailsPage = (products) => {
                 <span className="title-font font-medium text-2xl text-gray-900">
                   Price : $ {productPrice}
                 </span>
-                <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                <button onClick={() => productAdd(product)} className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
                   Add To Cart
                 </button>
                 {/* Missing part of the code, please provide the rest */}

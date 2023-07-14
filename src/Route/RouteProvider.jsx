@@ -16,6 +16,7 @@ import MyProduct from "../Pages/AdminPage/MyProduct/MyProduct";
 import AddPost from "../Pages/AdminPage/AddPost/AddPost";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import AllManageUser from "../Pages/AdminPage/AllManageUser/AllManageUser";
+import ManageAllProduct from "../Pages/AdminPage/ManageAllProduct/ManageAllProduct";
 
 const router = createBrowserRouter([
            {
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
                 {
                     path:'manage-user',
                     element: <PrivateRoute><AllManageUser></AllManageUser></PrivateRoute>
+                },
+                {
+                    path:'manage-all-product',
+                    element: <PrivateRoute><ManageAllProduct></ManageAllProduct></PrivateRoute>
                 },
                ]
            }

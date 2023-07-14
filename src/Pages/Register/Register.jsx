@@ -49,7 +49,6 @@ const Register = () => {
                     if (data.insertedId) {
                         toast.success('Register Success ')
                         navigate(from, { replace: true })
-
                     }
                 })
 
